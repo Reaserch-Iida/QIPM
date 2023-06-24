@@ -1,29 +1,28 @@
 import numpy as np
 from copy import deepcopy
 import sys
-import mosek.fusion as mosek
 import time
 import threading
 
 
-from generate_lo_problem_with_int_and_opt import *
-from generate_lo_problem_with_opt import *
-from generate_lo_problem_with_int import *
+from .generate_lo_problem_with_int_and_opt import *
+from .generate_lo_problem_with_opt import *
+from .generate_lo_problem_with_int import *
 
-from generate_sdo_problem_with_int_and_opt import *
-from generate_sdo_problem_with_opt import *
-from generate_sdo_problem_with_int import *
+from .generate_sdo_problem_with_int_and_opt import *
+from .generate_sdo_problem_with_opt import *
+from .generate_sdo_problem_with_int import *
 
-from generate_soco_problem_with_int_and_opt import *
-from generate_soco_problem_with_opt import *
-from generate_soco_problem_with_int import *
+from .generate_soco_problem_with_int_and_opt import *
+from .generate_soco_problem_with_opt import *
+from .generate_soco_problem_with_int import *
 
 #===========================================================================
 # Generate conic optimization problems
 #===========================================================================
 def generate_problem(m, n, parameters):
 
-	if parameters.has_interior == False and parameters.has_optimal == False: 
+	if parameters.has_interior == False and parameters.has_optimal == False:
 		sys.exit("Both has_interior and has_optimal cannot be \"False\".")
 
 	np.random.seed(parameters.seed)
@@ -73,7 +72,7 @@ def generate_problem(m, n, parameters):
 			results 	= generate_soco_problem_with_opt(m, n, parameters)
 
 		elif parameters.has_interior == True and parameters.has_optimal == False:
-			results 	= generate_soco_problem_with_int(m, n, parameters)	
+			results 	= generate_soco_problem_with_int(m, n, parameters)
 
 	#-----------------------------------------------------------------------
 	# Print the problem data
@@ -97,8 +96,8 @@ def generate_problem(m, n, parameters):
 		print("{:<25}{:.2e}".format("Norm of dual slacks:",np.linalg.norm(optimal_s)) )
 		print()
 		print("{:<25}{:.2e}".format("Norm of vector b:",np.linalg.norm(b)) )
-		
-		
+
+
 		if parameters.Problem_Type == "LO":
 			print("{:<25}{:.2e}".format("Norm of vector c:",np.linalg.norm(c)) )
 			print()
@@ -116,15 +115,15 @@ def generate_problem(m, n, parameters):
 			print("{:<25}{:}".format("RHS vector b:", b))
 			print("{:<25}{:}".format("Obj vector c:", c))
 			print()
-		
+
 			print(28*"-", "Optimal solution", 29*"-")
 			print("{:<25}".format("Primal variables:"), optimal_x)
 			print("{:<25}".format("Dual slacks:"), optimal_s)
 			print("{:<25}".format("Dual variables:"), optimal_y)
 			print()
 			print("{:<25}{:+.8e}".format("Optimal objective:", np.dot(c, optimal_x)) )
-			
-		
+
+
 		elif parameters.Problem_Type == "SDO":
 			print("{:<25}{:.2e}".format("Norm of C:",np.linalg.norm(c)) )
 			print()
@@ -166,13 +165,9 @@ def generate_problem(m, n, parameters):
 			print("{:<25}".format("Dual variables:"), optimal_y)
 			print()
 			print("{:<25}{:+.8e}".format("Optimal objective:", np.trace(np.dot(c, optimal_x))) )
-			
+
 
 		print(75*"=")
 		print()
 
 	return results
-
-
-
-

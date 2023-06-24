@@ -33,7 +33,7 @@ def create_eigs(matrix, parameters, negative_evals):
 	if (negative_evals == True):
 		num_ancillae 	= 1 + num_ancillae
 		ne_qfts 		= [QFT(num_ancillae - 1), QFT(num_ancillae - 1).inverse()]
-    
+
 	max_eig 			= max(np.linalg.eigvals(matrix))
 
 	eigenvalues 		=  EigsQPE( MatrixOperator(matrix= matrix),
@@ -42,7 +42,7 @@ def create_eigs(matrix, parameters, negative_evals):
 								num_ancillae		= num_ancillae,
 								expansion_mode		= 'suzuki',
 								expansion_order		= parameters.expansion_order,
-								evo_time 			= np.pi/max_eig.real,  
+								evo_time 			= np.pi/max_eig.real,
 								negative_evals 		= negative_evals,
 								ne_qfts 			= ne_qfts)
 
@@ -61,9 +61,9 @@ def QLSA(cofficent_matrix, rhs_vector, parameters):
 	orig_size 			= len(rhs_vector)
 	shots 				= 1e3
 	seed_simulator 		= 541376
-	
+
 	#-----------------------------------------------------------------------
-	# Resize the cofficent matrix 
+	# Resize the cofficent matrix
 	#-----------------------------------------------------------------------
 	matrix, vector, truncate_powerdim, truncate_hermitian 	= old_HHL.matrix_resize(cofficent_matrix, rhs_vector)
 
@@ -83,7 +83,7 @@ def QLSA(cofficent_matrix, rhs_vector, parameters):
 
 		# Ax = b => A.T Ax = A.T b
 	#-----------------------------------------------------------------------
-	# Normalize the linear system based on the norm of RHS  
+	# Normalize the linear system based on the norm of RHS
 	#-----------------------------------------------------------------------
 	normlize_coef 	= np.linalg.norm(vector)
 	matrix 			= matrix / normlize_coef
@@ -97,7 +97,7 @@ def QLSA(cofficent_matrix, rhs_vector, parameters):
 
 
 	start_time 		= time.time()
-	
+
 	#-----------------------------------------------------------------------
 	# The old implementation of HHL algorithm
 	#-----------------------------------------------------------------------
@@ -122,10 +122,10 @@ def QLSA(cofficent_matrix, rhs_vector, parameters):
 
 		algorithm 		= old_HHL(matrix, vector, truncate_powerdim, truncate_hermitian, eigenvalues,
 								init_state, reciprocal, num_q, num_a, orig_size)
-		
+
 
 		#-------------------------------------------------------------------
-		# Solve the linear system 
+		# Solve the linear system
 		#-------------------------------------------------------------------
 		if(parameters.Is_Simulator == True):
 			results 	= algorithm.run(QuantumInstance(Aer.get_backend('statevector_simulator'), shots=shots, seed_simulator=seed_simulator))
@@ -148,7 +148,7 @@ def QLSA(cofficent_matrix, rhs_vector, parameters):
 
 		backend 		= BasicAer.get_backend('statevector_simulator')
 		hhl 			= HHL(parameters.qlsa_precision,  quantum_instance=backend)
-		
+
 		hhl_solution 	= hhl.solve(matrix, vector)
 		naive_sv 		= np.real(Statevector(hhl_solution.state).data)
 
@@ -156,11 +156,11 @@ def QLSA(cofficent_matrix, rhs_vector, parameters):
 		ind2 			= 0 if len(rhs_vector) >= int(len(vector)/2) else int(len(vector)/2)
 
 		solution 		=  np.array(naive_sv[ind: ind+len(vector)])[ind2: ind2+len(rhs_vector)]
-	
+
 
 	end_time 			= time.time()
 
-	
+
 	#---------------------------------------------------------------
 	# Make sure that ||Ax|| == ||b||
 	#---------------------------------------------------------------
@@ -179,7 +179,7 @@ def QLSA(cofficent_matrix, rhs_vector, parameters):
 	if rhs_vector.dot(cofficent_matrix).dot(solution) < 0:
 		is_sign_changed	= True
 		solution 		*= - 1
-	
+
 	#-----------------------------------------------------------------------
 	# Print the results
 	#-----------------------------------------------------------------------
@@ -192,7 +192,7 @@ def QLSA(cofficent_matrix, rhs_vector, parameters):
 		print("{:<25}{:.2e}".format("Norm of matrix:", np.linalg.norm(matrix, 2)))
 		print("{:<25}{:.2e}".format("Condition number:", np.linalg.cond(matrix)))
 		print()
-		
+
 		print()
 		print(19*"-", "Parameters of the QLSA", 18*"-")
 		print("{:<25}{:d}".format("HHL method:", parameters.HHL_Method))
@@ -204,7 +204,7 @@ def QLSA(cofficent_matrix, rhs_vector, parameters):
 			print("{:<25}{:d}".format("num_qubits:", Statevector(hhl_solution.state).num_qubits))
 
 		print("{:<25}{:}".format("Is simulator:", parameters.Is_Simulator))
-		
+
 		if parameters.HHL_Method == 1:
 			print()
 			print(20*"-", "Results of the QLSA", 20*"-")
@@ -212,10 +212,7 @@ def QLSA(cofficent_matrix, rhs_vector, parameters):
 			print()
 			print("{:<25}{:d}".format("Circuit depth:", results['circuit_info']['depth']))
 			print("{:<25}{:d}".format("Circuit width:", results['circuit_info']['width']))
-		
+
 
 		print(61*"=")
 	return (solution,  is_sign_changed)
-	
-
-

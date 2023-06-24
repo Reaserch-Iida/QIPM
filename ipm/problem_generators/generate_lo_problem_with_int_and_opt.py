@@ -8,7 +8,7 @@ from copy import deepcopy
 #===========================================================================
 def generate_lo_problem_with_int_and_opt(m, n, parameters):
 
-	np.random.seed(parameters.seed)	
+	np.random.seed(parameters.seed)
 
 	mask 			= [1 if ind < m else 0 for ind in range(n)]
 	np.random.shuffle(mask)
@@ -44,17 +44,17 @@ def generate_lo_problem_with_int_and_opt(m, n, parameters):
 	ahat 			= (1/int_x[n])*(np.dot(A,(opt_x[:n]-int_x[:n])))
 	dhat 			= (1/int_y[m])*(np.dot(A.T,(opt_y[:m]-int_y[:m]))+opt_s[:n]-int_s[:n])
 	dlast 			= (1/int_x[n])*(np.dot(dhat,(opt_x[:n]-int_x[:n])))
-	AA 				= np.blocks([[A,np.matrix(ahat).T],[np.matrix(dhat),np.matrix(dlast)]])
+	AA 				= np.block([[A,np.matrix(ahat).T],[np.matrix(dhat),np.matrix(dlast)]])
 
 	AA 				= np.matmul(AA, AA.T) if parameters.make_psd == True else AA
 
-	u, s, v 		= np.linalg.svd(A, full_matrices=False)
+	# u, s, v 		= np.linalg.svd(AA, full_matrices=False)
 	s 				= np.linspace(parameters.norm_A, parameters.norm_A/parameters.condition_number, min(m, n))
 
-	AA 				= np.dot(u * s, v) if parameters.symmetry == False else np.dot(u * s, u.T)
+	# AA 				= np.dot(u * s, v) if parameters.symmetry == False else np.dot(u * s, u.T)
 
-	b 				= np.matmul(AA, opt_x)
-	c 				= np.matmul(AA.T, opt_y) + opt_s
+	b 				= np.array(AA) @ opt_x
+	c 				= np.array(AA).T @ opt_y + opt_s
 
 	if parameters.norm_b != -1:
 		temp_norm_b = np.linalg.norm(b)
@@ -62,12 +62,8 @@ def generate_lo_problem_with_int_and_opt(m, n, parameters):
 		opt_x 		= coef * opt_x
 		int_x 		= coef * int_x
 		b 			= coef * b
-	    
-	results     	= (A, b, c, opt_x, opt_y, opt_s, int_x, int_y, int_s)
 
-		
+	results     	= (AA, b, c, opt_x, opt_y, opt_s, int_x, int_y, int_s)
+
+
 	return results
-
-
-
-

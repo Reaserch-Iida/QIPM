@@ -21,7 +21,7 @@ def iterative_refinement_linear_system_solver(cofficent_matrix, rhs_vector, para
     IRprecision         = parameters.IR_LS_Precision
 
 
-    start_time          = time.time() 
+    start_time          = time.time()
 
     d                   = len(cofficent_matrix)
     iteration           = 0
@@ -31,7 +31,7 @@ def iterative_refinement_linear_system_solver(cofficent_matrix, rhs_vector, para
 
     failed              = False
 
-    def noise():        
+    def noise():
         noise_vector    = np.random.random(d)
         noise_vector    = noise_vector / np.linalg.norm(noise_vector) * parameters.LS_Precision
         return noise_vector
@@ -65,18 +65,15 @@ def iterative_refinement_linear_system_solver(cofficent_matrix, rhs_vector, para
         else:
             print("{:>4d}{:5}{:.3e}{:5}{:.3e}{:5}{:.3e}{:5}{:>5.0f}s".format(iteration," " ,QLSA_Precision , " ",np.linalg.norm(r), " ",nabla, "", runtime))
 
-        if np.linalg.norm(old_r - r) < 1e-8 and parameters.do_print: 
+        if np.linalg.norm(old_r - r) < 1e-8 and parameters.do_print:
             failed      = True
             print(61*"-")
             print("\nThe algorithm terminated before reaching the desired precision.")
-            break 
+            break
 
-    if failed == False and parameters.do_print: 
+    if failed == False and parameters.do_print:
         print(61*"-")
         print("\nThe algorithm successfully terminated.")
 
     if parameters.Is_Quantum == True: parameters.LS_Precision = QLSA_Precision
     return solution, parameters.LS_Precision, iteration
-	
-
-

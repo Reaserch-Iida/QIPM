@@ -1,8 +1,7 @@
+import os
 import sys
-sys.path.insert(1, '..')
+sys.path.insert(1, os.getcwd())
 from ipm import *
-import numpy as np
-import sys
 
 
 parameters 	= Parameters()
@@ -10,17 +9,17 @@ parameters 	= Parameters()
 
 parameters.seed  			= int(sys.argv[1])
 method 						= int(sys.argv[2])
-LO_Precision 				= float(sys.argv[3]) 
+LO_Precision 				= float(sys.argv[3])
 
 
 parameters.b 				= 1
 parameters.condition_number = 1
 
 parameters.have_interior 	= False
-parameters.do_print 		= True
+parameters.do_print 		= False
 
 
-A, b, c						= generate_problem(m=2, n=4, parameters=parameters)
+A, b, c, _, _, _, _, _, _						= generate_problem(m=2, n=4, parameters=parameters)
 
 model 						= Model(A, b, c)
 

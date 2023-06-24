@@ -11,7 +11,8 @@ parameters.seed  		= int(sys.argv[1])
 parameters.norm_rhs 	= 2
 parameters.cond 		= float(sys.argv[2])
 
-A, b, c, int_x, int_y, int_s	= generate_problem(m=3, n=4, parameters=parameters)
+A, b, c, _, _, _, int_x, int_y, int_s	= generate_problem(m=3, n=4, parameters=parameters)
+
 
 model 		= Model(A, b, c)
 model.x 	= int_x

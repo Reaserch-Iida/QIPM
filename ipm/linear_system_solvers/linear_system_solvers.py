@@ -44,15 +44,15 @@ def linear_system_solver(cofficent_matrix, rhs_vector, parameters):
 	exact_solution 				= np.linalg.solve(cofficent_matrix, rhs_vector)
 
 	if parameters.LS_Method == "IR-LS":
-		(output.solution, 
-		output.LS_Precision, 
+		(output.solution,
+		output.LS_Precision,
 		output.iteration) 		= iterative_refinement_linear_system_solver(cofficent_matrix, rhs_vector, parameters)
 		output.is_sign_changed 	= False
 
 	elif parameters.LS_Method == "LS" and parameters.Is_Quantum == False:
 		output.solution 		= exact_solution
 		output.is_sign_changed 	= False
-		
+
 
 	elif parameters.LS_Method == "LS" and parameters.Is_Quantum == True:
 		(output.solution,
@@ -70,6 +70,3 @@ def linear_system_solver(cofficent_matrix, rhs_vector, parameters):
 	if parameters.do_print == True: print(output)
 
 	return (output.solution, output.norm_of_residual, output.is_sign_changed)
-	
-
-

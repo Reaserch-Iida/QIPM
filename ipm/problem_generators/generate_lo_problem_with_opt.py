@@ -4,19 +4,19 @@ from copy import deepcopy
 
 
 #===========================================================================
-# Linear optimization problem with a known optimal solution 
+# Linear optimization problem with a known optimal solution
 #===========================================================================
 def generate_lo_problem_with_opt(m, n, parameters):
 
-	np.random.seed(parameters.seed)	
+	np.random.seed(parameters.seed)
 
 	mask        = [1 if ind < m else 0 for ind in range(n)]
-    np.random.shuffle(mask)
+	np.random.shuffle(mask)
 
-    opt_x 		= np.random.rand(n)
-    opt_x 		= np.multiply(opt_x,mask)
+	opt_x 		= np.random.rand(n)
+	opt_x 		= np.multiply(opt_x,mask)
 	opt_s 		= np.random.rand(n)
-    opt_s 		= opt_s-np.multiply(opt_s,mask)
+	opt_s 		= opt_s-np.multiply(opt_s,mask)
 	opt_y 		= np.random.rand(m) - 0.5
 	opt_x 		= (parameters.norm_x/np.linalg.norm(opt_x))*opt_x
 	opt_s 		= (parameters.norm_s/np.linalg.norm(opt_s))*opt_s
@@ -41,9 +41,5 @@ def generate_lo_problem_with_opt(m, n, parameters):
 
 	results 	= (A, b, c, opt_x, opt_y, opt_s)
 
-		
+
 	return results
-
-
-
-
